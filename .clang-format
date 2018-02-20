@@ -1,0 +1,5 @@
+BasedOnStyle: LLVM
+
+AlignAfterOpenBracket: false
+BinPackParameters: false
+PointerAlignment: Left

@@ -8,19 +8,18 @@
   NOTE(ubsan): technically a ContiguousIterator,
   but I can't figure out how to write that.
 */
-template <typename T, std::size_t Width>
-class matrix_row {
+template <typename T, std::size_t Width> class matrix_row {
   T underlying_[Width];
+
 public:
-  template <typename, std::size_t, std::size_t>
-  friend class matrix;
+  template <typename, std::size_t, std::size_t> friend class matrix;
 
   class iterator {
     T* current_;
-    constexpr iterator(T* ptr): current_(ptr) {}
+    constexpr iterator(T* ptr) : current_(ptr) {}
+
   public:
-    template <typename T, std::size_t Width>
-    friend class matrix_row;
+    template <typename T, std::size_t Width> friend class matrix_row;
 
     using value_type = T;
     using reference = T&;
@@ -47,27 +46,19 @@ public:
       return current_ >= other.current_;
     }
 
-    constexpr reference operator*() {
-      return *current_;
-    }
-    constexpr pointer operator->() {
-      return current_;
-    }
+    constexpr reference operator*() { return *current_; }
+    constexpr pointer operator->() { return current_; }
 
     constexpr iterator& operator++() {
       ++current_;
       return *this;
     }
-    constexpr iterator operator++(int) {
-      return iterator(current_++);
-    }
+    constexpr iterator operator++(int) { return iterator(current_++); }
     constexpr iterator& operator--() {
       --current_;
       return *this;
     }
-    constexpr iterator operator--(int) {
-      return iterator(current_--);
-    }
+    constexpr iterator operator--(int) { return iterator(current_--); }
 
     constexpr iterator& operator+=(difference_type dif) {
       current_ += dif;
@@ -96,10 +87,10 @@ public:
   };
   class const_iterator {
     T const* current_;
-    constexpr const_iterator(T* ptr): current_(ptr) {}
+    constexpr const_iterator(T* ptr) : current_(ptr) {}
+
   public:
-    template <typename T, std::size_t Width>
-    friend class matrix_row;
+    template <typename T, std::size_t Width> friend class matrix_row;
 
     using value_type = T;
     using reference = T const&;
@@ -126,27 +117,19 @@ public:
       return current_ >= other.current_;
     }
 
-    constexpr reference operator*() {
-      return *current_;
-    }
-    constexpr pointer operator->() {
-      return current_;
-    }
+    constexpr reference operator*() { return *current_; }
+    constexpr pointer operator->() { return current_; }
 
     constexpr iterator& operator++() {
       ++current_;
       return *this;
     }
-    constexpr iterator operator++(int) {
-      return iterator(current_++);
-    }
+    constexpr iterator operator++(int) { return iterator(current_++); }
     constexpr iterator& operator--() {
       --current_;
       return *this;
     }
-    constexpr iterator operator--(int) {
-      return iterator(current_--);
-    }
+    constexpr iterator operator--(int) { return iterator(current_--); }
 
     constexpr iterator& operator+=(difference_type dif) {
       current_ += dif;
@@ -176,51 +159,35 @@ public:
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-  constexpr iterator begin() {
-    return iterator(&underlying_[0]);
-  }
-  constexpr iterator end() {
-    return iterator(&underlying_[Width]);
-  }
+  constexpr iterator begin() { return iterator(&underlying_[0]); }
+  constexpr iterator end() { return iterator(&underlying_[Width]); }
   constexpr const_iterator cbegin() const {
     return const_iterator(&underlying_[0]);
   }
   constexpr const_iterator cend() const {
     return const_iterator(&underlying_[Width]);
   }
-  constexpr const_iterator begin() const {
-    return cbegin();
-  }
-  constexpr const_iterator end() const {
-    return cend();
-  }
+  constexpr const_iterator begin() const { return cbegin(); }
+  constexpr const_iterator end() const { return cend(); }
 
-  constexpr reverse_iterator rbegin() {
-    return std::reverse_iterator(end());
-  }
-  constexpr reverse_iterator rend() {
-    return std::reverse_iterator(begin());
-  }
+  constexpr reverse_iterator rbegin() { return std::reverse_iterator(end()); }
+  constexpr reverse_iterator rend() { return std::reverse_iterator(begin()); }
   constexpr const_reverse_iterator crbegin() const {
     return std::reverse_iterator(cend());
   }
   constexpr const_reverse_iterator crend() const {
     return std::reverse_iterator(cbegin());
   }
-  constexpr const_reverse_iterator rbegin() const {
-    return crbegin();
-  }
-  constexpr const_reverse_iterator rend() const {
-    return crend();
-  }
+  constexpr const_reverse_iterator rbegin() const { return crbegin(); }
+  constexpr const_reverse_iterator rend() const { return crend(); }
 };
 
-template <typename T, std::size_t Width>
-class matrix_row_iterator {
+template <typename T, std::size_t Width> class matrix_row_iterator {
   matrix_row<T, Width>* current_;
 
   constexpr matrix_row_iterator(matrix_row<T, Width>* underlying_)
-    : current_(underlying_) {}
+      : current_(underlying_) {}
+
 public:
   template <typename T, std::size_t Height, std::size_t Width>
   friend class matrix;
@@ -250,12 +217,8 @@ public:
     return current_ >= other.current_;
   }
 
-  constexpr reference operator*() {
-    return *current_;
-  }
-  constexpr pointer operator->() {
-    return current_;
-  }
+  constexpr reference operator*() { return *current_; }
+  constexpr pointer operator->() { return current_; }
 
   constexpr matrix_row_iterator& operator++() {
     ++current_;
@@ -280,9 +243,7 @@ public:
     return matrix_row_iterator(current_ + dif);
   }
   constexpr friend matrix_row_iterator operator+(
-    difference_type dif,
-    matrix_row_iterator self)
-  {
+      difference_type dif, matrix_row_iterator self) {
     return matrix_row_iterator(self.current_ + dif);
   }
   constexpr matrix_row_iterator& operator-=(difference_type dif) {
@@ -296,17 +257,15 @@ public:
     return current_ - other.current_;
   }
 
-  constexpr reference operator[](difference_type dif) {
-    return current_[dif];
-  }
+  constexpr reference operator[](difference_type dif) { return current_[dif]; }
 };
 
-template <typename T, std::size_t Width>
-class matrix_const_row_iterator {
+template <typename T, std::size_t Width> class matrix_const_row_iterator {
   matrix_row<T, Width> const* current_;
 
   constexpr matrix_const_row_iterator(matrix_row<T, Width> const* underlying_)
-    : current_(underlying_) {}
+      : current_(underlying_) {}
+
 public:
   template <typename T, std::size_t Height, std::size_t Width>
   friend class matrix;
@@ -336,12 +295,8 @@ public:
     return current_ >= other.current_;
   }
 
-  constexpr reference operator*() {
-    return *current_;
-  }
-  constexpr pointer operator->() {
-    return current_;
-  }
+  constexpr reference operator*() { return *current_; }
+  constexpr pointer operator->() { return current_; }
 
   constexpr matrix_const_row_iterator& operator++() {
     ++current_;
@@ -366,9 +321,7 @@ public:
     return matrix_const_row_iterator(current_ + dif);
   }
   constexpr friend matrix_const_row_iterator operator+(
-    difference_type dif,
-    matrix_const_row_iterator self)
-  {
+      difference_type dif, matrix_const_row_iterator self) {
     return matrix_const_row_iterator(self.current_ + dif);
   }
   constexpr matrix_const_row_iterator& operator-=(difference_type dif) {
@@ -382,7 +335,5 @@ public:
     return current_ - other.current_;
   }
 
-  constexpr reference operator[](difference_type dif) {
-    return current_[dif];
-  }
+  constexpr reference operator[](difference_type dif) { return current_[dif]; }
 };
