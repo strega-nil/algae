@@ -14,7 +14,8 @@
 
 namespace algae {
 
-template <typename T, std::size_t Rows> class vector {
+template <typename T, std::size_t Rows>
+class vector {
   T storage_[Rows];
 
 public:
@@ -65,14 +66,20 @@ public:
     return std::move(storage_[idx]);
   }
 
-  template <std::size_t Idx> constexpr T& get() & { return storage_[Idx]; }
-  template <std::size_t Idx> constexpr T const& get() const & {
+  template <std::size_t Idx>
+  constexpr T& get() & {
     return storage_[Idx];
   }
-  template <std::size_t Idx> constexpr T&& get() && {
+  template <std::size_t Idx>
+  constexpr T const& get() const & {
+    return storage_[Idx];
+  }
+  template <std::size_t Idx>
+  constexpr T&& get() && {
     return std::move(storage_[Idx]);
   }
-  template <std::size_t Idx> constexpr T const&& get() const && {
+  template <std::size_t Idx>
+  constexpr T const&& get() const && {
     return std::move(storage_[Idx]);
   }
 };
@@ -100,7 +107,8 @@ template <typename T, std::size_t N>
 constexpr auto dot(vector<T, N> const& lhs, vector<T, N> const& rhs) {
   return iter::accumulate_in_place(
       iter::zip(iter::adl_begin(lhs), iter::adl_begin(rhs)),
-      iter::zip(iter::adl_end(lhs), iter::adl_end(rhs)), T(0),
+      iter::zip(iter::adl_end(lhs), iter::adl_end(rhs)),
+      T(0),
       impl::dot_op_fn{});
 }
 

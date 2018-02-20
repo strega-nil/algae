@@ -7,47 +7,58 @@ namespace algae {
 
 namespace iter {
 
-template <typename T> constexpr auto adl_begin(T&& t) {
+template <typename T>
+constexpr auto adl_begin(T&& t) {
   using ::std::begin;
   return begin(std::forward<T>(t));
 }
-template <typename T> constexpr auto adl_end(T&& t) {
+template <typename T>
+constexpr auto adl_end(T&& t) {
   using ::std::end;
   return end(std::forward<T>(t));
 }
-template <typename T> constexpr auto adl_cbegin(T&& t) {
+template <typename T>
+constexpr auto adl_cbegin(T&& t) {
   using ::std::cbegin;
   return cbegin(std::forward<T>(t));
 }
-template <typename T> constexpr auto adl_cend(T&& t) {
+template <typename T>
+constexpr auto adl_cend(T&& t) {
   using ::std::cend;
   return cend(std::forward<T>(t));
 }
-template <typename T> constexpr auto adl_rbegin(T&& t) {
+template <typename T>
+constexpr auto adl_rbegin(T&& t) {
   using ::std::rbegin;
   return rbegin(std::forward<T>(t));
 }
-template <typename T> constexpr auto adl_rend(T&& t) {
+template <typename T>
+constexpr auto adl_rend(T&& t) {
   using ::std::rend;
   return rend(std::forward<T>(t));
 }
-template <typename T> constexpr auto adl_crbegin(T&& t) {
+template <typename T>
+constexpr auto adl_crbegin(T&& t) {
   using ::std::crbegin;
   return crbegin(std::forward<T>(t));
 }
-template <typename T> constexpr auto adl_crend(T&& t) {
+template <typename T>
+constexpr auto adl_crend(T&& t) {
   using ::std::crend;
   return crend(std::forward<T>(t));
 }
 
-template <typename Iter1, typename Iter2> struct zip_t {
+template <typename Iter1, typename Iter2>
+struct zip_t {
   Iter1 it1;
   Iter2 it2;
 
-  using value_type = std::pair<typename std::iterator_traits<Iter1>::value_type,
+  using value_type = std::pair<
+      typename std::iterator_traits<Iter1>::value_type,
       typename std::iterator_traits<Iter2>::value_type>;
 
-  using reference = std::pair<typename std::iterator_traits<Iter1>::reference,
+  using reference = std::pair<
+      typename std::iterator_traits<Iter1>::reference,
       typename std::iterator_traits<Iter2>::reference>;
 
   using pointer = void;
@@ -76,7 +87,8 @@ template <typename Iter1, typename Iter2> struct zip_t {
   constexpr auto operator++(int) { return zip_t<Iter1, Iter2>{it1++, it2++}; }
 };
 
-template <typename It1, typename It2> constexpr auto zip(It1 it1, It2 it2) {
+template <typename It1, typename It2>
+constexpr auto zip(It1 it1, It2 it2) {
   return zip_t<It1, It2>{it1, it2};
 }
 
@@ -92,7 +104,8 @@ constexpr T accumulate_in_place(It first, It_end last, T init, Op op) {
 
 namespace range {
 
-template <typename R1, typename R2> struct zip_t {
+template <typename R1, typename R2>
+struct zip_t {
   // should be std::reference_wrapper, but that's apparently non-constexpr
   R1* r1;
   R2* r2;
@@ -128,7 +141,8 @@ template <typename R1, typename R2> struct zip_t {
   constexpr auto rend() const { return crend(); }
 };
 
-template <typename R1, typename R2> constexpr auto zip(R1& r1, R2& r2) {
+template <typename R1, typename R2>
+constexpr auto zip(R1& r1, R2& r2) {
   return zip_t<R1, R2>{std::addressof(r1), std::addressof(r2)};
 }
 

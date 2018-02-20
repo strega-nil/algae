@@ -11,7 +11,8 @@ namespace algae {
 
 #include "_matrix_row.h"
 
-template <typename T, std::size_t Height, std::size_t Width> class matrix {
+template <typename T, std::size_t Height, std::size_t Width>
+class matrix {
   std::array<matrix_row<T, Width>, Height> underlying_;
 
 public:

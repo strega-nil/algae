@@ -5,7 +5,8 @@
 #include <algae/matrix.h>
 #include <algae/vector.h>
 
-template <typename... Ts> void ignore(Ts&&...) {}
+template <typename... Ts>
+void ignore(Ts&&...) {}
 
 namespace lit = algae::literals;
 using namespace std::literals;

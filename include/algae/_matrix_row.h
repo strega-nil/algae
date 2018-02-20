@@ -8,18 +8,21 @@
   NOTE(ubsan): technically a ContiguousIterator,
   but I can't figure out how to write that.
 */
-template <typename T, std::size_t Width> class matrix_row {
+template <typename T, std::size_t Width>
+class matrix_row {
   T underlying_[Width];
 
 public:
-  template <typename, std::size_t, std::size_t> friend class matrix;
+  template <typename, std::size_t, std::size_t>
+  friend class matrix;
 
   class iterator {
     T* current_;
     constexpr iterator(T* ptr) : current_(ptr) {}
 
   public:
-    template <typename T, std::size_t Width> friend class matrix_row;
+    template <typename T, std::size_t Width>
+    friend class matrix_row;
 
     using value_type = T;
     using reference = T&;
@@ -90,7 +93,8 @@ public:
     constexpr const_iterator(T* ptr) : current_(ptr) {}
 
   public:
-    template <typename T, std::size_t Width> friend class matrix_row;
+    template <typename T, std::size_t Width>
+    friend class matrix_row;
 
     using value_type = T;
     using reference = T const&;
@@ -182,7 +186,8 @@ public:
   constexpr const_reverse_iterator rend() const { return crend(); }
 };
 
-template <typename T, std::size_t Width> class matrix_row_iterator {
+template <typename T, std::size_t Width>
+class matrix_row_iterator {
   matrix_row<T, Width>* current_;
 
   constexpr matrix_row_iterator(matrix_row<T, Width>* underlying_)
@@ -242,8 +247,8 @@ public:
   constexpr matrix_row_iterator operator+(difference_type dif) const {
     return matrix_row_iterator(current_ + dif);
   }
-  constexpr friend matrix_row_iterator operator+(
-      difference_type dif, matrix_row_iterator self) {
+  constexpr friend matrix_row_iterator
+  operator+(difference_type dif, matrix_row_iterator self) {
     return matrix_row_iterator(self.current_ + dif);
   }
   constexpr matrix_row_iterator& operator-=(difference_type dif) {
@@ -260,7 +265,8 @@ public:
   constexpr reference operator[](difference_type dif) { return current_[dif]; }
 };
 
-template <typename T, std::size_t Width> class matrix_const_row_iterator {
+template <typename T, std::size_t Width>
+class matrix_const_row_iterator {
   matrix_row<T, Width> const* current_;
 
   constexpr matrix_const_row_iterator(matrix_row<T, Width> const* underlying_)
@@ -320,8 +326,8 @@ public:
   constexpr matrix_const_row_iterator operator+(difference_type dif) const {
     return matrix_const_row_iterator(current_ + dif);
   }
-  constexpr friend matrix_const_row_iterator operator+(
-      difference_type dif, matrix_const_row_iterator self) {
+  constexpr friend matrix_const_row_iterator
+  operator+(difference_type dif, matrix_const_row_iterator self) {
     return matrix_const_row_iterator(self.current_ + dif);
   }
   constexpr matrix_const_row_iterator& operator-=(difference_type dif) {
