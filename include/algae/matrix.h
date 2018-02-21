@@ -21,8 +21,8 @@ public:
   matrix(std::array<std::array<T, Width>, Height> init) {
     using std::begin;
     using std::end;
-    for (auto & [ src, dst ] : range::zip(init, underlying_)) {
-      std::move(begin(src), end(src), begin(dst));
+    for (auto [dst, src] : range::zip(init, underlying_)) {
+      std::move(begin(dst), end(dst), begin(src));
     }
   }
 };
