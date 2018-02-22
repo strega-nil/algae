@@ -1,118 +1,131 @@
-#include <catch2/catch.hpp>
+﻿#include <catch2/catch.hpp>
 
 #include <algae/literals.h>
 #include <algae/vector.h>
 
 namespace lit = algae::literals;
 
+#define REQUIRE_DOT(fst, snd) REQUIRE(dot((fst), (snd)) == answer)
+
 TEST_CASE("dot product in R^2", "[vector]") {
-  {
+  SECTION("dot(0, 0)") {
     auto v = lit::vec | 0 | 0 | lit::end;
-    REQUIRE(dot(v, v) == 0);
+    auto answer = 0;
+    REQUIRE_DOT(v, v);
+  }
+  SECTION("dot(<0, 1>, <1, 0>)") {
+    auto v = lit::vec | 0 | 1 | lit::end;
+    auto u = lit::vec | 1 | 0 | lit::end;
+    auto answer = 0;
+    REQUIRE_DOT(v, u);
+    REQUIRE_DOT(u, v);
+  }
+  SECTION("dot(<2, 1>, <1, -2>)") {
+    auto v = lit::vec | 2 | 1 | lit::end;
+    auto u = lit::vec | 1 | -2 | lit::end;
+    auto answer = 2 - 2;
+    REQUIRE_DOT(v, u);
+    REQUIRE_DOT(u, v);
+  }
+  SECTION("dot(<1, 0>, <1, 0>)") {
+    auto v = lit::vec | 1 | 0 | lit::end;
+    auto answer = 1 + 0;
+    REQUIRE_DOT(v, v);
+  }
+  SECTION("dot(<1, 1>, <1, 1>)") {
+    auto v = lit::vec | 1 | 1 | lit::end;
+    auto answer = 1 + 1;
+    REQUIRE_DOT(v, v);
+  }
+  SECTION("dot(<5, -5>, <1, -2>)") {
+    auto v = lit::vec | 5 | -5 | lit::end;
+    auto u = lit::vec | 1 | -2 | lit::end;
+    auto answer = 5 + 10;
+    REQUIRE_DOT(v, u);
+    REQUIRE_DOT(u, v);
   }
 }
 
-#if 0
-void dot2() {
-  {
-    constexpr auto v = lit::vec | 0 | 0 | lit::end;
-    static_assert(dot(v, v) == 0);
+TEST_CASE("dot product in R^3", "[vector]") {
+  SECTION("dot(0, 0)") {
+    auto v = lit::vec | 0 | 0 | 0 | lit::end;
+    auto answer = 0;
+    REQUIRE_DOT(v, v);
   }
-  {
-    constexpr auto v = lit::vec | 0 | 1 | lit::end;
-    constexpr auto u = lit::vec | 1 | 0 | lit::end;
-    static_assert(dot(v, u) == 0);
-    static_assert(dot(u, v) == 0);
+  SECTION("dot(<0, 1, 0>, <1, 0, 1>)") {
+    auto v = lit::vec | 0 | 1 | 0 | lit::end;
+    auto u = lit::vec | 1 | 0 | 1 | lit::end;
+    auto answer = 0;
+    REQUIRE_DOT(v, u);
+    REQUIRE_DOT(u, v);
   }
-  {
-    constexpr auto v = lit::vec | 2 |  1 | lit::end;
-    constexpr auto v = lit::vec | 1 | -2 | lit::end;
-    static_assert(dot(v, u) == 0);
-    static_assert(dot(u, v) == 0);
+  SECTION("dot(<-1, 1, 2>, <1, -1, -1>)") {
+    auto v = lit::vec | -1 |  1 | 2 | lit::end;
+    auto u = lit::vec |  1 | -1 | 1 | lit::end;
+    auto answer = -1 - 1 + 2;
+    REQUIRE_DOT(v, u);
+    REQUIRE_DOT(u, v);
   }
-  {
-    constexpr auto v = lit::vec | 1 | 0 | lit::end;
-    static_assert(dot(v, v) == 1);
+  SECTION("dot(<1, 1, 1>, <1, 1, 1>)") {
+    auto v = lit::vec | 1 | 1 | 1 | lit::end;
+    auto answer = 1 + 1 + 1;
+    REQUIRE_DOT(v, v);
   }
-  {
-    constexpr auto v = lit::vec | 1 | 1 | lit::end;
-    static_assert(dot(v, v) == 2);
+  SECTION("dot(<1, 0, 1>, <0, 0, 1>)") {
+    auto v = lit::vec | 1 | 0 | 1 | lit::end;
+    auto u = lit::vec | 0 | 0 | 1 | lit::end;
+    auto answer = 0 + 0 + 1;
+    REQUIRE_DOT(v, u);
+    REQUIRE_DOT(u, v);
   }
-  {
-    constexpr auto v = lit::vec | 5 | -5 | lit::end;
-    constexpr auto v = lit::vec | 1 | -2 | lit::end;
-    static_assert(dot(v, u) == -5);
-    static_assert(dot(u, v) == -5);
-  }
-}
-
-void dot3() {
-  {
-    constexpr auto v = lit::vec | 0 | 0 | 0 | lit::end;
-    static_assert(dot(v, v) == 0);
-  }
-  {
-    constexpr auto v = lit::vec | 0 | 1 | 0 | lit::end;
-    constexpr auto u = lit::vec | 1 | 0 | 0 | lit::end;
-    static_assert(dot(v, u) == 0);
-    static_assert(dot(u, v) == 0);
-  }
-  {
-    constexpr auto v = lit::vec | -1 |  1 |  2 | lit::end;
-    constexpr auto u = lit::vec |  1 | -1 | -1 | lit::end;
-    static_assert(dot(v, u) == 0);
-    static_assert(dot(u, v) == 0);
-  }
-  {
-    constexpr auto v = lit::vec | 1 | 1 | 1 | lit::end;
-    static_assert(dot(v, v) == 3);
-  }
-  {
-    constexpr auto v = lit::vec | 1 | 0 | 1 | lit::end;
-    constexpr auto u = lit::vec | 0 | 0 | 1 | lit::end;
-    static_assert(dot(v, u) == 1);
-    static_assert(dot(u, v) == 1);
-  }
-  {
-    constexpr auto v = lit::vec | 3 | 2 | 1 | lit::end;
-    constexpr auto u = lit::vec | 4 | 5 | 6 | lit::end;
-    static_assert(dot(v, u) == 28);
-    static_assert(dot(u, v) == 28);
+  SECTION("dot(<3, 2, 1>, <4, 5, 6>)") {
+    auto v = lit::vec | 3 | 2 | 1 | lit::end;
+    auto u = lit::vec | 4 | 5 | 6 | lit::end;
+    auto answer = 12 + 10 + 6;
+    REQUIRE_DOT(v, u);
+    REQUIRE_DOT(u, v);
   }
 }
 
-void dot4() {
-  {
-    constexpr auto v = lit::vec | 0 | 0 | 0 | 0 | lit::end;
-    static_assert(dot(v, v) == 0);
+TEST_CASE("dot product in R^4", "[vector]") {
+  SECTION("dot(0, 0)") {
+    auto v = lit::vec | 0 | 0 | 0 | 0 | lit::end;
+    auto answer = 0;
+    REQUIRE_DOT(v, v);
   }
-  {
-    constexpr auto v = lit::vec | 0 | 1 | 1 | 0 | lit::end;
-    constexpr auto u = lit::vec | 1 | 0 | 0 | 1 | lit::end;
-    static_assert(dot(v, u) == 0);
-    static_assert(dot(u, v) == 0);
+  SECTION("dot(<0, 1, 1, 0>, <1, 0, 0, 1>)") {
+    auto v = lit::vec | 0 | 1 | 1 | 0 | lit::end;
+    auto u = lit::vec | 1 | 0 | 0 | 1 | lit::end;
+    auto answer = 0 + 0 + 0 + 0;
+    REQUIRE_DOT(v, u);
+    REQUIRE_DOT(u, v);
   }
-  {
-    constexpr auto v = lit::vec | -1 |  1 |  2 | 1 | lit::end;
-    constexpr auto u = lit::vec |  1 | -1 | -1 | 8 | lit::end;
-    static_assert(dot(v, u) == 8);
-    static_assert(dot(u, v) == 8);
+  SECTION("dot(<-1, 1, 2, 1>, <1, -1, -1, 8>)") {
+    auto v = lit::vec | -1 |  1 |  2 | 1 | lit::end;
+    auto u = lit::vec |  1 | -1 | -1 | 8 | lit::end;
+    auto answer = -1 - 1 - 2 + 8;
+    REQUIRE_DOT(v, u);
+    REQUIRE_DOT(u, v);
   }
-  {
-    constexpr auto v = lit::vec | 1 | 1 | 1 | 1 | lit::end;
-    static_assert(dot(v, v) == 4);
+  SECTION("dot(<1, 1, 1, 1>, <1, 1, 1, 1>)") {
+    auto v = lit::vec | 1 | 1 | 1 | 1 | lit::end;
+    auto answer = 1 + 1 + 1 + 1;
+    REQUIRE_DOT(v, v);
   }
-  {
-    constexpr auto v = lit::vec | 1 | 0 | 1 |  2 | lit::end;
-    constexpr auto u = lit::vec | 0 | 0 | 1 | -1 | lit::end;
-    static_assert(dot(v, u) == -1);
-    static_assert(dot(u, v) == -1);
+  SECTION("dot(<1, 0, 1, 2>, <0, 0, 1, -1>)") {
+    auto v = lit::vec | 1 | 0 | 1 |  2 | lit::end;
+    auto u = lit::vec | 0 | 0 | 1 | -1 | lit::end;
+    auto answer = 0 + 0 + 1 - 2;
+    REQUIRE_DOT(v, u);
+    REQUIRE_DOT(u, v);
   }
-  {
-    constexpr auto v = lit::vec | 4 | 3 | 2 | 1 | lit::end;
-    constexpr auto u = lit::vec | 4 | 5 | 6 | 7 | lit::end;
-    static_assert(dot(v, u) == 50);
-    static_assert(dot(u, v) == 50);
+  SECTION("dot(<4, 3, 2, 1>, <5, 6, 7, 8>") {
+    auto v = lit::vec | 4 | 3 | 2 | 1 | lit::end;
+    auto u = lit::vec | 5 | 6 | 7 | 8 | lit::end;
+    auto answer = 20 + 18 + 14 + 8;
+    REQUIRE_DOT(v, u);
+    REQUIRE_DOT(u, v);
   }
 }
-#endif
+
+#undef REQUIRE_DOT
