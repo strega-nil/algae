@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <ciso646>
 #include <cstddef>
 #include <iterator>
 
@@ -89,6 +90,6 @@ public:
   // TODO(ubsan): column iterators
 };
 
-}
+} // namespace algae
 
 #include <algae/implementation/matrix_iterators.h>

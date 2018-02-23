@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ciso646>
 #include <cstddef>
 
 namespace algae {
@@ -16,8 +17,8 @@ public:
   friend class matrix_row;
 
   using value_type = T;
-  using reference = T & ;
-  using pointer = T * ;
+  using reference = T&;
+  using pointer = T*;
   using difference_type = std::ptrdiff_t;
   using iterator_category = std::random_access_iterator_tag;
 
@@ -47,12 +48,16 @@ public:
     ++current_;
     return *this;
   }
-  constexpr matrix_row_iterator operator++(int) { return matrix_row_iterator(current_++); }
+  constexpr matrix_row_iterator operator++(int) {
+    return matrix_row_iterator(current_++);
+  }
   constexpr matrix_row_iterator& operator--() {
     --current_;
     return *this;
   }
-  constexpr matrix_row_iterator operator--(int) { return matrix_row_iterator(current_--); }
+  constexpr matrix_row_iterator operator--(int) {
+    return matrix_row_iterator(current_--);
+  }
 
   constexpr matrix_row_iterator& operator+=(difference_type dif) {
     current_ += dif;
@@ -61,7 +66,8 @@ public:
   constexpr matrix_row_iterator operator+(difference_type dif) const {
     return matrix_row_iterator(current_ + dif);
   }
-  constexpr friend matrix_row_iterator operator+(difference_type dif, matrix_row_iterator self) {
+  constexpr friend matrix_row_iterator
+  operator+(difference_type dif, matrix_row_iterator self) {
     return matrix_row_iterator(self.current_ + dif);
   }
   constexpr matrix_row_iterator& operator-=(difference_type dif) {
@@ -75,9 +81,7 @@ public:
     return current_ - other.current_;
   }
 
-  constexpr reference operator[](difference_type dif) {
-    return current_[dif];
-  }
+  constexpr reference operator[](difference_type dif) { return current_[dif]; }
 };
 
 template <typename T>
@@ -121,12 +125,16 @@ public:
     ++current_;
     return *this;
   }
-  constexpr matrix_row_const_iterator operator++(int) { return matrix_row_const_iterator(current_++); }
+  constexpr matrix_row_const_iterator operator++(int) {
+    return matrix_row_const_iterator(current_++);
+  }
   constexpr matrix_row_const_iterator& operator--() {
     --current_;
     return *this;
   }
-  constexpr matrix_row_const_iterator operator--(int) { return matrix_row_const_iterator(current_--); }
+  constexpr matrix_row_const_iterator operator--(int) {
+    return matrix_row_const_iterator(current_--);
+  }
 
   constexpr matrix_row_const_iterator& operator+=(difference_type dif) {
     current_ += dif;
@@ -135,7 +143,8 @@ public:
   constexpr matrix_row_const_iterator operator+(difference_type dif) const {
     return matrix_row_const_iterator(current_ + dif);
   }
-  constexpr friend matrix_row_const_iterator operator+(difference_type dif, matrix_row_const_iterator self) {
+  constexpr friend matrix_row_const_iterator
+  operator+(difference_type dif, matrix_row_const_iterator self) {
     return matrix_row_const_iterator(self.current_ + dif);
   }
   constexpr matrix_row_const_iterator& operator-=(difference_type dif) {
@@ -149,9 +158,7 @@ public:
     return current_ - other.current_;
   }
 
-  constexpr reference operator[](difference_type dif) {
-    return current_[dif];
-  }
+  constexpr reference operator[](difference_type dif) { return current_[dif]; }
 };
 
 // matrix::row_iterator
@@ -161,7 +168,7 @@ class matrix_iterator_row {
   matrix_row<T, Width>* current_;
 
   constexpr matrix_iterator_row(matrix_row<T, Width>* underlying_)
-    : current_(underlying_) {}
+      : current_(underlying_) {}
 
 public:
   template <typename T, std::size_t Height, std::size_t Width>
@@ -218,7 +225,7 @@ public:
     return matrix_iterator_row(current_ + dif);
   }
   constexpr friend matrix_iterator_row
-    operator+(difference_type dif, matrix_iterator_row self) {
+  operator+(difference_type dif, matrix_iterator_row self) {
     return matrix_iterator_row(self.current_ + dif);
   }
   constexpr matrix_iterator_row& operator-=(difference_type dif) {
@@ -240,7 +247,7 @@ class matrix_const_iterator_row {
   matrix_row<T, Width> const* current_;
 
   constexpr matrix_const_iterator_row(matrix_row<T, Width> const* underlying_)
-    : current_(underlying_) {}
+      : current_(underlying_) {}
 
 public:
   template <typename T, std::size_t Height, std::size_t Width>
@@ -297,7 +304,7 @@ public:
     return matrix_const_iterator_row(current_ + dif);
   }
   constexpr friend matrix_const_iterator_row
-    operator+(difference_type dif, matrix_const_iterator_row self) {
+  operator+(difference_type dif, matrix_const_iterator_row self) {
     return matrix_const_iterator_row(self.current_ + dif);
   }
   constexpr matrix_const_iterator_row& operator-=(difference_type dif) {
@@ -314,5 +321,4 @@ public:
   constexpr reference operator[](difference_type dif) { return current_[dif]; }
 };
 
-
-}
+} // namespace algae

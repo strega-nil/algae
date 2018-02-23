@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ciso646>
 #include <tuple>
 #include <utility>
 
@@ -31,7 +32,7 @@ struct vector_literal_t {
     };
 
     constexpr auto operator|(literals::end_literal_t) && {
-      return std::apply(make_vector_generic{}, underlying);
+      return std::apply(make_vector_generic{}, std::move(underlying));
     }
   };
 

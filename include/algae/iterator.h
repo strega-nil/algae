@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ciso646>
 #include <functional>
 #include <iterator>
 
@@ -69,11 +70,11 @@ struct zip_t {
   // if either of the iterators are at an end, they compare unequal
   template <typename End1, typename End2>
   constexpr bool operator==(zip_t<End1, End2> const& other) {
-    return (it1 == other.it1) || (it2 == other.it2);
+    return (it1 == other.it1) or (it2 == other.it2);
   }
   template <typename End1, typename End2>
   constexpr bool operator!=(zip_t<End1, End2> const& other) {
-    return !(*this == other);
+    return not(*this == other);
   }
 
   constexpr auto operator*() { return reference(*it1, *it2); }
@@ -93,11 +94,40 @@ constexpr auto zip(It1 it1, It2 it2) {
 }
 
 template <typename It, typename It_end, typename T, typename Op>
-constexpr T accumulate_in_place(It first, It_end last, T init, Op op) {
+constexpr T accumulate(It first, It_end last, T init, Op op) {
   for (; first != last; ++first) {
-    op(init, *first);
+    init = op(std::move(init), *first);
   }
   return init;
+}
+
+// NOTE(ubsan): for sized iterators, these could be faster in the case
+// sz1 != sz2
+// TODO(ubsan): implement this later
+template <typename Lhs, typename Lhs_end, typename Rhs, typename Rhs_end>
+constexpr bool equal(Lhs lhs, Lhs_end lhs_last, Rhs rhs, Rhs_end rhs_last) {
+  for (; lhs != lhs_last and rhs != rhs_last; ++lhs, ++rhs) {
+    if (not(*lhs == *rhs)) {
+      return false;
+    }
+  }
+  if (lhs != lhs_last or rhs != rhs_last) {
+    // the sizes were different
+    return false;
+  }
+  return true;
+}
+
+template <typename Lhs, typename Lhs_end, typename Rhs, typename Rhs_end>
+constexpr bool not_equal(Lhs lhs, Lhs_end lhs_last, Rhs rhs, Rhs_end rhs_last) {
+  for (; lhs != lhs_last and rhs != rhs_last; ++lhs, ++rhs) {
+    if (not(*lhs != *rhs)) {
+      return false;
+    }
+  }
+  // the sizes not being the same doesn't matter here - they aren't equal
+  // anyways
+  return true;
 }
 
 } // namespace iter
@@ -147,9 +177,27 @@ constexpr auto zip(R1& r1, R2& r2) {
 }
 
 template <typename Range, typename T, typename Op>
-constexpr T accumulate_in_place(Range& range, T init, Op op) {
-  return iter::accumulate_in_place(
+constexpr T accumulate(Range&& range, T init, Op op) {
+  return iter::accumulate(
       iter::adl_begin(range), iter::adl_end(range), std::move(init), op);
+}
+
+template <typename Lhs, typename Rhs>
+constexpr bool equal(Lhs&& lhs, Rhs&& rhs) {
+  return iter::equal(
+      iter::adl_begin(lhs),
+      iter::adl_end(lhs),
+      iter::adl_begin(rhs),
+      iter::adl_end(rhs));
+}
+
+template <typename Lhs, typename Rhs>
+constexpr bool not_equal(Lhs&& lhs, Rhs&& rhs) {
+  return iter::not_equal(
+      iter::adl_begin(lhs),
+      iter::adl_end(lhs),
+      iter::adl_begin(rhs),
+      iter::adl_end(rhs));
 }
 
 } // namespace range
