@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <ciso646>
 #include <cstddef>
 #include <iterator>
 

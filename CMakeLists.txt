@@ -14,8 +14,13 @@ target_compile_features(algae INTERFACE cxx_std_17)
 if(MSVC)
   target_compile_options(algae
     INTERFACE
-      /D_SCL_SECURE_NO_WARNINGS
-      /permissive-)
+      /permissive-
+      /Zc:externConstexpr
+      /Zc:inline
+      /Zc:rvalueCast
+      /Zc:strictStrings
+      /Zc:throwingNew
+      /D_SCL_SECURE_NO_WARNINGS)
 endif()
 
 ### EXECUTABLE (for homework) ###

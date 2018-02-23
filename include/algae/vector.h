@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <array>
-#include <ciso646>
 #include <cstddef>
 #include <memory>
 #include <numeric>
